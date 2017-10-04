@@ -34,12 +34,16 @@ public class Main extends Application {
 	DrawingManager manager;
 	Point begin, end;
 	
+	// ustawienie stanu pocz¹tkowego
+	// w tym stanie nie mo¿na nic narysowaæ
 	Drawing state = Drawing.none;
 	
 	
-	
+	//zmienne t³a panelu menu
 	private double red, green, blue, opacity = 1;
 	
+	//enum ze stanami okreœlaj¹cymi co nale¿y rysowaæ lub edytowaæ oraz
+	//w jaki sposób tego dokonaæ
 	public static enum Drawing{
 		none, line, rectangle, circle, edit, mouse
 	}
@@ -60,9 +64,8 @@ public class Main extends Application {
 		}
 	}
 	
-	
 	/**
-	 * ustawienie wartoœci t³a menu
+	 * ustawienie wartoœci koloru t³a menu
 	 */
 	private void initRGB(){
 		
@@ -77,16 +80,17 @@ public class Main extends Application {
 		this.stage = stage;
 		scene = new Scene(root, WIDTH, HEIGHT);
 		
-		//scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		this.stage.setScene(scene);
 		this.stage.setResizable(false);
 		this.stage.setTitle("Grafika");
 		
+		//okreœlenie parametrów panelu menu
 		initRGB();
 		rightPane = new GridPane();
 		rightPane.setMinSize(0.25*WIDTH, HEIGHT);
 		rightPane.setBackground(new Background(new BackgroundFill(new Color(red, green, blue, opacity), null, null)));
 		
+		//inicjalizacja przycisków
 		line = new Button("Linia");
 		rectangle = new Button("Prostok¹t");
 		circle = new Button("Okr¹g");
@@ -94,10 +98,12 @@ public class Main extends Application {
 		set = new Button("Ustaw");
 		mouse = new Button("Myszka");
 		
+		//ustawienie zawartoœci etykiet
 		w = new Label("szerokoœæ:");
 		h = new Label("wysokoœæ:");
 		r = new Label("promieñ:");
 		
+		//zainicjalizowanie pól tekstowych
 		w1 = new TextField(); h1 = new TextField(); r1 = new TextField();
 		w1.setEditable(false);
 		h1.setEditable(false);
@@ -106,6 +112,7 @@ public class Main extends Application {
 		h1.setPrefWidth(3);
 		r1.setPrefWidth(3);
 		
+		//dodanie elementów do panelu z menu
 		rightPane.add(line, 0, 0);
 		rightPane.add(rectangle, 1, 0);
 		rightPane.add(circle, 2, 0);
@@ -140,35 +147,61 @@ public class Main extends Application {
 	public void addListeners() {
 		canvasPane.setOnMousePressed(event -> {
 			// obs³u¿enie momentu klikniêcia
+			// zapisanie wspó³rzêdnych momentu wciœniêcia przycisku myszy
+			// do zmiennej begin
 			begin = new Point((int)event.getSceneX(), (int)event.getSceneY());
 		});
 		
+		//obs³u¿enie przeci¹gania - nie wykorzystywane w programie
 		canvasPane.setOnMouseDragged(event -> {
 			//System.out.println("dragging");
 		});
 		
+		// obs³u¿enie uwolnienia przycisku myszki
+		// w zmiennej end przechowywane s¹ wspó³rzêdne miejsca, gdzie
+		// przycisk myszki zosta³ zwolniony
 		canvasPane.setOnMouseClicked(event -> {
 			end = new Point((int)event.getSceneX(), (int)event.getSceneY());
+			// wywo³anie metody decyduj¹cej o tym, co narysowaæ 
+			// w parametrach podawany jest stan, czyli informacja co nale¿y narysowaæ
+			// zmienne begin i end to punkty klikniêcia i zwolnienia przycisku myszki
 			manager.drawFigure(state, begin, end);
 		});
 		
+		// obs³u¿enie klikniêcia w przycisk "Linia"
+		// ustawienie stanu na rysowanie linii
 		line.setOnAction(event -> {
 			state = Drawing.line;
 		});
 		
+		// obs³u¿enie klikniêcia w przycisk "Prostok¹t"
+		// ustawienie stanu na rysowanie prostok¹ta
 		rectangle.setOnAction(event -> {
 			state = Drawing.rectangle;
 		});
 		
+		// obs³u¿enie klikniêcia w przycisk "Okr¹g"
+		// ustawienie stanu na rysowanie okrêgu
 		circle.setOnAction(event -> {
 			state = Drawing.circle;
 		});
 		
+		// obs³u¿enie klikniêcia w przycisk "Edytuj"
+		// ustawienie stanu na edycjê
+		// po wciœniêciu przycisku mo¿na klikn¹æ w jak¹œ figurê i w ten sposób j¹
+		// zaznaczyæ jako obiekt przeznaczony do edycji
 		edit.setOnAction(event -> {
 			state = Drawing.edit;
 		});
 		
+		// obs³u¿enie klikniêcia w przycisk "Ustaw"
+		// po klikniêciu w ten przycisk s¹ ustawiane parametry figury
+		// znajduj¹cej siê w stanie edycji, wczytywana jest figura z listy obecnie
+		// narysowanych figur i ustawia siê dla niej parametry podane w
+		// polach tekstowych
 		set.setOnAction(event -> {
+			// manager.instance daje informacjê jaka figura jest obecnie edytowana
+			// ma to na celu zmianê w³aœciwych parametrów figury 
 			switch(manager.instance.toString()) {
 			case "line":
 				Line l = (Line)manager.list.get(manager.checked);
@@ -193,6 +226,8 @@ public class Main extends Application {
 			}
 		});
 		
+		// obs³u¿enie klikniêcia w przycisk "Myszka"
+		// ustawienie stanu na edycjê figur za pomoc¹ myszki
 		mouse.setOnAction(event -> {
 			state = Drawing.mouse;
 		});
