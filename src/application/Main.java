@@ -1,17 +1,27 @@
 package application;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 import javafx.application.Application;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -26,13 +36,17 @@ public class Main extends Application {
 	Stage stage;
 	GridPane rightPane;
 	Pane canvasPane;
+	ImageView imgView;
+	WritableImage image;
 	
-	Button line, rectangle, circle, edit, set, mouse;
+	Button line, rectangle, circle, edit, set, mouse, P3P6, save;
 	Label w, h, r;
 	static TextField w1, h1, r1;
 	
 	DrawingManager manager;
 	Point begin, end;
+	
+	public PPM ppm;
 	
 	// ustawienie stanu pocz¹tkowego
 	// w tym stanie nie mo¿na nic narysowaæ
@@ -40,7 +54,7 @@ public class Main extends Application {
 	
 	
 	//zmienne t³a panelu menu
-	private double red, green, blue, opacity = 1;
+	//private double red, green, blue, opacity = 1;
 	
 	//enum ze stanami okreœlaj¹cymi co nale¿y rysowaæ lub edytowaæ oraz
 	//w jaki sposób tego dokonaæ
@@ -67,14 +81,14 @@ public class Main extends Application {
 	/**
 	 * ustawienie wartoœci koloru t³a menu
 	 */
-	private void initRGB(){
+	/*private void initRGB(){
 		
 		int color = 200;
 		
 		red = color/255.0;
 		green = color/255.0;
 		blue = color/255.0;
-	}
+	}*/
 	
 	private void setup(Stage stage) {
 		this.stage = stage;
@@ -85,10 +99,10 @@ public class Main extends Application {
 		this.stage.setTitle("Grafika");
 		
 		//okreœlenie parametrów panelu menu
-		initRGB();
+		//initRGB();
 		rightPane = new GridPane();
 		rightPane.setMinSize(0.25*WIDTH, HEIGHT);
-		rightPane.setBackground(new Background(new BackgroundFill(new Color(red, green, blue, opacity), null, null)));
+		rightPane.setBackground(new Background(new BackgroundFill(null, null, null)));
 		
 		//inicjalizacja przycisków
 		line = new Button("Linia");
@@ -97,6 +111,8 @@ public class Main extends Application {
 		edit = new Button("Edytuj");
 		set = new Button("Ustaw");
 		mouse = new Button("Myszka");
+		P3P6 = new Button("PPM");
+		save = new Button("Zapisz");
 		
 		//ustawienie zawartoœci etykiet
 		w = new Label("szerokoœæ:");
@@ -125,11 +141,16 @@ public class Main extends Application {
 		rightPane.add(r1, 1, 4);
 		rightPane.add(set, 2, 3);
 		rightPane.add(mouse, 1, 1);
+		rightPane.add(P3P6, 0, 5);
+		rightPane.add(save, 1, 5);
 
 		
 		//ustawienie panelu z p³ótnem
 		canvasPane = new Pane();
 		canvasPane.setMinSize(0.76*WIDTH, HEIGHT);
+		
+		imgView = new ImageView();
+		
 		
 		//stworzenie managera rysowania
 		manager = new DrawingManager(canvasPane);
@@ -230,6 +251,49 @@ public class Main extends Application {
 		// ustawienie stanu na edycjê figur za pomoc¹ myszki
 		mouse.setOnAction(event -> {
 			state = Drawing.mouse;
+		});
+		
+		P3P6.setOnAction(event -> {
+			ppm = new PPM(stage);
+			if(ppm.checkFile()) {
+				ppm.prepareImage();
+				image = ppm.image;
+				
+				imgView.setImage(image);
+				imgView.setFitHeight(ppm.height);
+				imgView.setFitWidth(ppm.width);
+				
+				canvasPane.getChildren().add(imgView);				
+			}else {
+				if(ppm.ppm == PPM.Type.jpg) {
+					image = ppm.image;
+					imgView.setImage(image);
+					canvasPane.getChildren().add(imgView);
+				}else {
+					ppm.showDialog("Coœ siê... coœ siê popsu³o...");
+				}
+			}
+		});
+		
+		save.setOnAction(event -> {
+			FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Zapisz obraz");
+            fileChooser.getExtensionFilters().addAll(
+            		new FileChooser.ExtensionFilter("PNG", "*.png"),
+            		new FileChooser.ExtensionFilter("JPG", "*.jpg")
+            		);
+             
+            File file = fileChooser.showSaveDialog(stage);
+            BufferedImage img = SwingFXUtils.fromFXImage(ppm.image, null);
+            BufferedImage imgRGB = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+            imgRGB.createGraphics().drawImage(img, 0, 0, Color.WHITE, null);
+            if (file != null) {
+                try {
+                    ImageIO.write(imgRGB, "png", file);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
 		});
 		
 	}
