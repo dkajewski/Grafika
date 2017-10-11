@@ -78,18 +78,6 @@ public class Main extends Application {
 		}
 	}
 	
-	/**
-	 * ustawienie wartoœci koloru t³a menu
-	 */
-	/*private void initRGB(){
-		
-		int color = 200;
-		
-		red = color/255.0;
-		green = color/255.0;
-		blue = color/255.0;
-	}*/
-	
 	private void setup(Stage stage) {
 		this.stage = stage;
 		scene = new Scene(root, WIDTH, HEIGHT);
@@ -253,8 +241,16 @@ public class Main extends Application {
 			state = Drawing.mouse;
 		});
 		
+		//przycisk otwieraj¹cy okno umo¿liwiaj¹ce wybór pliku
+		//do wczytania
 		P3P6.setOnAction(event -> {
 			ppm = new PPM(stage);
+			
+			//jeœli metoda sprawdzaj¹ca zwróci true,
+			//wyœwietlany jest wczytany obraz ppm P3
+			//w przeciwnym wypadku nastêpuje próba
+			//otworzenia pliku jpg, jeœli to nie jest mo¿liwe,
+			//nastêpuje wyœwietlenie okna z komunikatem o b³êdzie
 			if(ppm.checkFile()) {
 				ppm.prepareImage();
 				image = ppm.image;
@@ -275,6 +271,7 @@ public class Main extends Application {
 			}
 		});
 		
+		//obs³u¿enie przycisku do zapisu pliku
 		save.setOnAction(event -> {
 			FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Zapisz obraz");
@@ -282,7 +279,11 @@ public class Main extends Application {
             		new FileChooser.ExtensionFilter("PNG", "*.png"),
             		new FileChooser.ExtensionFilter("JPG", "*.jpg")
             		);
-             
+            
+            //nastêpuje wczytanie wyœwietlanego obrazu do zmiennej img
+            //i okreœlenie jego rozmiarów
+            //nastêpnie plik jest zapisywany w lokacji wskazanej 
+            //przez u¿ytkownika
             File file = fileChooser.showSaveDialog(stage);
             BufferedImage img = SwingFXUtils.fromFXImage(ppm.image, null);
             BufferedImage imgRGB = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
