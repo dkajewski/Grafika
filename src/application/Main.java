@@ -39,7 +39,7 @@ public class Main extends Application {
 	ImageView imgView;
 	WritableImage image;
 	
-	Button line, rectangle, circle, edit, set, mouse, P3P6, save;
+	Button line, rectangle, circle, edit, set, mouse, P3P6, save, RGB, CMYK;
 	Label w, h, r;
 	static TextField w1, h1, r1;
 	
@@ -47,6 +47,7 @@ public class Main extends Application {
 	Point begin, end;
 	
 	public PPM ppm;
+	public RGBCMYK rc;
 	
 	// ustawienie stanu pocz¹tkowego
 	// w tym stanie nie mo¿na nic narysowaæ
@@ -101,6 +102,8 @@ public class Main extends Application {
 		mouse = new Button("Myszka");
 		P3P6 = new Button("PPM");
 		save = new Button("Zapisz");
+		RGB = new Button("RGB");
+		CMYK = new Button("CMYK");
 		
 		//ustawienie zawartoœci etykiet
 		w = new Label("szerokoœæ:");
@@ -131,6 +134,8 @@ public class Main extends Application {
 		rightPane.add(mouse, 1, 1);
 		rightPane.add(P3P6, 0, 5);
 		rightPane.add(save, 1, 5);
+		rightPane.add(RGB, 0, 6);
+		rightPane.add(CMYK, 1, 6);
 
 		
 		//ustawienie panelu z p³ótnem
@@ -146,6 +151,8 @@ public class Main extends Application {
 		
 		//dodanie paneli do wyœwietlania
 		root.getChildren().addAll(canvasPane, rightPane);
+		
+		rc = new RGBCMYK();
 		
 		this.stage.show();
 	}
@@ -245,7 +252,6 @@ public class Main extends Application {
 		//do wczytania
 		P3P6.setOnAction(event -> {
 			ppm = new PPM(stage);
-			
 			//jeœli metoda sprawdzaj¹ca zwróci true,
 			//wyœwietlany jest wczytany obraz ppm P3
 			//w przeciwnym wypadku nastêpuje próba
@@ -264,6 +270,9 @@ public class Main extends Application {
 				if(ppm.ppm == PPM.Type.jpg) {
 					image = ppm.image;
 					imgView.setImage(image);
+					
+					//
+					
 					canvasPane.getChildren().add(imgView);
 				}else {
 					ppm.showDialog("Coœ siê... coœ siê popsu³o...");
@@ -295,6 +304,21 @@ public class Main extends Application {
                     ex.printStackTrace();
                 }
             }
+		});
+		
+		RGB.setOnAction(event -> {
+			if(rc.CMYKp.size()>0) {
+				System.out.println("elo");
+				rc.makeRGB(image);
+			}
+			
+		});
+		
+		CMYK.setOnAction(event -> {
+			if(rc.pixels.size()==0) {
+				rc.preparePixelsList(image);
+			}
+			rc.makeCMYK(image);
 		});
 		
 	}

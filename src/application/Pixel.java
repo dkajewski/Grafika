@@ -3,6 +3,7 @@ package application;
 public class Pixel {
 	
 	int r, g, b;
+	double red, green, blue;
 	Point p;
 	
 	//konstruktory do poszczególnych pikseli
@@ -20,6 +21,15 @@ public class Pixel {
 		g=c;
 		b=c;
 		this.p = p;
+	}
+	
+	//konstruktor do zmiennych typu double
+	//dziêki temu nie trzeba dzieliæ kolorów przez 255
+	public Pixel(double r, double g, double b, int x, int y) {
+		red = r;
+		green = g;
+		blue = b;
+		p = new Point(x, y);
 	}
 
 }
