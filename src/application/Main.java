@@ -347,22 +347,22 @@ public class Main extends Application {
 		});
 		
 		RGB.setOnAction(event -> {
-			/*if(rc.CMYKp.size()>0) {
-				System.out.println("elo");
-				rc.makeRGB(image);
-			}*/
+			// wczytanie wartoœci RGB z pól tekstowych
 			int r = Integer.parseInt(rtf.getText());
 			int g = Integer.parseInt(gtf.getText());
 			int b = Integer.parseInt(btf.getText());
+			// ustawienie koloru etykiety RGB i wartoœci pól tekstowych w CMYK
 			rc.setRgbLabel(r, g, b);
 			
 		});
 		
 		CMYK.setOnAction(event -> {
+			// wczytanie wartoœci CMYK z pól tekstowych
 			int c = Integer.parseInt(ctf.getText());
 			int m = Integer.parseInt(mtf.getText());
 			int y = Integer.parseInt(ytf.getText());
 			int k = Integer.parseInt(ktf.getText());
+			// ustawienie koloru etykiety CMYK i wartoœci pól tekstowych w RGB
 			rc.setCmykLabel(c, m, y, k);
 		});
 		
