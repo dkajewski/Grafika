@@ -40,8 +40,11 @@ public class Main extends Application {
 	WritableImage image;
 	
 	Button line, rectangle, circle, edit, set, mouse, P3P6, save, RGB, CMYK;
-	Label w, h, r;
-	static TextField w1, h1, r1;
+	static Label w, h, r, rgbLabel, cmykLabel,
+		rLabel, gLabel, bLabel, cLabel, mLabel, yLabel, kLabel,
+		rl, gl, bl, cl, ml, yl, kl;
+	static TextField w1, h1, r1,
+		rtf, gtf, btf, ctf, mtf, ytf, ktf;
 	
 	DrawingManager manager;
 	Point begin, end;
@@ -109,6 +112,17 @@ public class Main extends Application {
 		w = new Label("szerokoœæ:");
 		h = new Label("wysokoœæ:");
 		r = new Label("promieñ:");
+		rgbLabel = new Label("");
+		cmykLabel =  new Label("");
+		//javafx.scene.paint.Color c = new javafx.scene.paint.Color(arg0, arg1, arg2, arg3)
+		rgbLabel.setPrefSize(20, 20);
+		cmykLabel.setPrefSize(20, 20);
+		rgbLabel.setBackground(new Background(new 
+				BackgroundFill(javafx.scene.paint.Color.BLACK, null, null)));
+		cmykLabel.setBackground(new Background(new 
+				BackgroundFill(javafx.scene.paint.Color.BLACK, null, null)));
+		rl = new Label("R"); gl = new Label("G"); bl = new Label("B");
+		cl = new Label("C"); ml = new Label("M"); yl = new Label("Y"); kl = new Label("K");
 		
 		//zainicjalizowanie pól tekstowych
 		w1 = new TextField(); h1 = new TextField(); r1 = new TextField();
@@ -118,6 +132,16 @@ public class Main extends Application {
 		w1.setPrefWidth(3);
 		h1.setPrefWidth(3);
 		r1.setPrefWidth(3);
+		rtf = new TextField("0"); gtf = new TextField("0"); btf = new TextField("0");
+		rtf.setPrefWidth(3);
+		gtf.setPrefWidth(3);
+		btf.setPrefWidth(3);
+		
+		ctf = new TextField("0"); mtf = new TextField("0"); ytf = new TextField("0"); ktf = new TextField("255");
+		ctf.setPrefWidth(3);
+		mtf.setPrefWidth(3);
+		ytf.setPrefWidth(3);
+		ktf.setPrefWidth(3);
 		
 		//dodanie elementów do panelu z menu
 		rightPane.add(line, 0, 0);
@@ -134,8 +158,24 @@ public class Main extends Application {
 		rightPane.add(mouse, 1, 1);
 		rightPane.add(P3P6, 0, 5);
 		rightPane.add(save, 1, 5);
-		rightPane.add(RGB, 0, 6);
-		rightPane.add(CMYK, 1, 6);
+		rightPane.add(RGB, 3, 8);
+		rightPane.add(CMYK, 3, 11);
+		rightPane.add(rgbLabel, 0, 7);
+		rightPane.add(rtf, 1, 7);
+		rightPane.add(gtf, 1, 8);
+		rightPane.add(btf, 1, 9);
+		rightPane.add(rl, 2, 7);
+		rightPane.add(gl, 2, 8);
+		rightPane.add(bl, 2, 9);
+		rightPane.add(cmykLabel, 0, 10);
+		rightPane.add(ctf, 1, 10);
+		rightPane.add(mtf, 1, 11);
+		rightPane.add(ytf, 1, 12);
+		rightPane.add(ktf, 1, 13);
+		rightPane.add(cl, 2, 10);
+		rightPane.add(ml, 2, 11);
+		rightPane.add(yl, 2, 12);
+		rightPane.add(kl, 2, 13);
 
 		
 		//ustawienie panelu z p³ótnem
@@ -307,18 +347,23 @@ public class Main extends Application {
 		});
 		
 		RGB.setOnAction(event -> {
-			if(rc.CMYKp.size()>0) {
+			/*if(rc.CMYKp.size()>0) {
 				System.out.println("elo");
 				rc.makeRGB(image);
-			}
+			}*/
+			int r = Integer.parseInt(rtf.getText());
+			int g = Integer.parseInt(gtf.getText());
+			int b = Integer.parseInt(btf.getText());
+			rc.setRgbLabel(r, g, b);
 			
 		});
 		
 		CMYK.setOnAction(event -> {
-			if(rc.pixels.size()==0) {
-				rc.preparePixelsList(image);
-			}
-			rc.makeCMYK(image);
+			int c = Integer.parseInt(ctf.getText());
+			int m = Integer.parseInt(mtf.getText());
+			int y = Integer.parseInt(ytf.getText());
+			int k = Integer.parseInt(ktf.getText());
+			rc.setCmykLabel(c, m, y, k);
 		});
 		
 	}

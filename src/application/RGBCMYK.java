@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.paint.Color;
 
 public class RGBCMYK {
@@ -78,6 +80,62 @@ public class RGBCMYK {
 			pWriter.setColor(pixels.get(i).p.x, pixels.get(i).p.y, new Color(c.getRed()/255.0, c.getGreen()/255.0, c.getBlue()/255.0, 1));
 			CMYKp.add(new CMYKpixel(toCmyk, pixels.get(i).p.x, pixels.get(i).p.y));
 		}
+	}
+	
+	public void setRgbLabel(int r, int g, int b) {
+		Main.rgbLabel.setBackground(new Background(new BackgroundFill(new Color(r/255.0,
+				g/255.0, b/255.0, 1), null, null)));
+		int[] arr = convertToCmyk(new int[] {r, g, b});
+		Main.ctf.setText(arr[0]+"");
+		Main.mtf.setText(arr[1]+"");
+		Main.ytf.setText(arr[2]+"");
+		Main.ktf.setText(arr[3]+"");
+		
+	}
+	
+	public void setCmykLabel(int c, int m, int y, int k) {
+		float c1 = (float) (c/255.0);
+		float m1 = (float) (c/255.0);
+		float y1 = (float) (c/255.0);
+		float k1 = (float) (c/255.0);
+		int[] arr = convertToRgb(new float[] {c1, m1, y1, k1});
+		Main.cmykLabel.setBackground(new Background(new BackgroundFill(new Color(arr[0]/255.0,
+				arr[1]/255.0, arr[2]/255.0, 1), null, null)));
+		Main.rtf.setText(arr[0]+"");
+		Main.gtf.setText(arr[1]+"");
+		Main.btf.setText(arr[2]+"");
+		
+	}
+	
+	public int[] convertToCmyk(int[] arr) {
+		int[] cmyk = new int[4];
+		float c, m, y, k;
+		k =(float) (1-(max(arr)/255.0));
+		c = (float) ((1-arr[0]/255.0-k)/(1-k));
+		m = (float) ((1-arr[1]/255.0-k)/(1-k));
+		y = (float) ((1-arr[2]/255.0-k)/(1-k));
+		
+		cmyk = new int[]{(int)c*255, (int)m*255, (int)y*255, (int)k*255};
+		return cmyk;
+	}
+	
+	public int max(int[] arr) {
+		int m = arr[0];
+		if(arr[1]>m) {
+			m=arr[1];
+		}
+		
+		if(arr[2]>m) {
+			m=arr[2];
+		}
+		return m;
+	}
+	
+	public int[] convertToRgb(float arr[]) {
+		float r = 255*(1-arr[0])*(1-arr[3]);
+		float g = 255*(1-arr[1])*(1-arr[3]);
+		float b = 255*(1-arr[2])*(1-arr[3]);
+		return new int[] {(int) r, (int) g, (int) b};
 	}
 	
 }
