@@ -39,15 +39,19 @@ public class Main extends Application {
 	ImageView imgView;
 	WritableImage image;
 	
-	Button line, rectangle, circle, edit, set, mouse, P3P6, save, RGB, CMYK;
+	Button line, rectangle, circle, edit, set, mouse, P3P6, save, RGB, CMYK,
+		fmid, fmed, fsobel, fhpass, fgauss, fmask;
 	static Label w, h, r, rgbLabel, cmykLabel,
 		rLabel, gLabel, bLabel, cLabel, mLabel, yLabel, kLabel,
 		rl, gl, bl, cl, ml, yl, kl;
 	static TextField w1, h1, r1,
-		rtf, gtf, btf, ctf, mtf, ytf, ktf;
+		rtf, gtf, btf, ctf, mtf, ytf, ktf,
+		_1, _2, _3, _4, _5, _6, _7, _8, _9;
 	
 	DrawingManager manager;
 	Point begin, end;
+	
+	Filter f;
 	
 	public PPM ppm;
 	public RGBCMYK rc;
@@ -108,6 +112,13 @@ public class Main extends Application {
 		RGB = new Button("RGB");
 		CMYK = new Button("CMYK");
 		
+		fmid = new Button("uœr");
+		fmed = new Button("med");
+		fsobel = new Button("sobel");
+		fhpass = new Button("grnp");
+		fgauss = new Button("Gauss");
+		fmask = new Button("maska");
+		
 		//ustawienie zawartoœci etykiet
 		w = new Label("szerokoœæ:");
 		h = new Label("wysokoœæ:");
@@ -143,6 +154,20 @@ public class Main extends Application {
 		ytf.setPrefWidth(3);
 		ktf.setPrefWidth(3);
 		
+		_1 = new TextField("0"); _2 = new TextField("0"); _3 = new TextField("0"); _4 = new TextField("0"); 
+		_5 = new TextField("0"); _6 = new TextField("0"); _7 = new TextField("0"); _8 = new TextField("0"); 
+		_9 = new TextField("0"); 
+		_1.setPrefWidth(3);
+		_2.setPrefWidth(3);
+		_3.setPrefWidth(3);
+		_4.setPrefWidth(3);
+		_5.setPrefWidth(3);
+		_6.setPrefWidth(3);
+		_7.setPrefWidth(3);
+		_8.setPrefWidth(3);
+		_9.setPrefWidth(3);
+		
+		
 		//dodanie elementów do panelu z menu
 		rightPane.add(line, 0, 0);
 		rightPane.add(rectangle, 1, 0);
@@ -176,7 +201,21 @@ public class Main extends Application {
 		rightPane.add(ml, 2, 11);
 		rightPane.add(yl, 2, 12);
 		rightPane.add(kl, 2, 13);
-
+		rightPane.add(fmid, 0, 14);
+		rightPane.add(fmed, 1, 14);
+		rightPane.add(fsobel, 2, 14);
+		rightPane.add(fhpass, 0, 15);
+		rightPane.add(fgauss, 1, 15);
+		rightPane.add(fmask, 2, 15);
+		rightPane.add(_1, 0, 16);
+		rightPane.add(_2, 1, 16);
+		rightPane.add(_3, 2, 16);
+		rightPane.add(_4, 0, 17);
+		rightPane.add(_5, 1, 17);
+		rightPane.add(_6, 2, 17);
+		rightPane.add(_7, 0, 18);
+		rightPane.add(_8, 1, 18);
+		rightPane.add(_9, 2, 18);
 		
 		//ustawienie panelu z p³ótnem
 		canvasPane = new Pane();
@@ -188,9 +227,11 @@ public class Main extends Application {
 		//stworzenie managera rysowania
 		manager = new DrawingManager(canvasPane);
 		//canvasPane.getChildren().add(canvas);
+		canvasPane.getChildren().add(imgView);
 		
 		//dodanie paneli do wyœwietlania
 		root.getChildren().addAll(canvasPane, rightPane);
+		
 		
 		rc = new RGBCMYK();
 		
@@ -311,9 +352,10 @@ public class Main extends Application {
 					image = ppm.image;
 					imgView.setImage(image);
 					
-					//
+					f = new Filter(image);
 					
-					canvasPane.getChildren().add(imgView);
+					
+					
 				}else {
 					ppm.showDialog("Coœ siê... coœ siê popsu³o...");
 				}
@@ -366,6 +408,57 @@ public class Main extends Application {
 			rc.setCmykLabel(c, m, y, k);
 		});
 		
+		fmask.setOnAction(event -> {
+			int[][] arr = getTextFromTextFields();
+			image = f.Convolution(arr);
+		});
+		
+		fmid.setOnAction(event -> {
+			_1.setText("1");_2.setText("1");_3.setText("1");
+			_4.setText("1");_5.setText("1");_6.setText("1");
+			_7.setText("1");_8.setText("1");_9.setText("1");
+			int[][] arr = getTextFromTextFields();
+			image = f.Convolution(arr);
+		});
+		
+		fmed.setOnAction(event -> {
+			image = f.Mediana(3);
+		});
+		
+		fsobel.setOnAction(event -> {
+			_1.setText("1");_2.setText("2");_3.setText("1");
+			_4.setText("0");_5.setText("0");_6.setText("0");
+			_7.setText("-1");_8.setText("-2");_9.setText("-1");
+			int[][] arr = getTextFromTextFields();
+			image = f.Convolution(arr);
+		});
+		
+		fhpass.setOnAction(event -> {
+			_1.setText("-1");_2.setText("-1");_3.setText("-1");
+			_4.setText("-1");_5.setText("9");_6.setText("-1");
+			_7.setText("-1");_8.setText("-1");_9.setText("-1");
+			int[][] arr = getTextFromTextFields();
+			image = f.Convolution(arr);
+		});
+		
+		fgauss.setOnAction(event -> {
+			_1.setText("1");_2.setText("2");_3.setText("1");
+			_4.setText("2");_5.setText("4");_6.setText("2");
+			_7.setText("1");_8.setText("2");_9.setText("1");
+			int[][] arr = getTextFromTextFields();
+			image = f.Convolution(arr);
+		});
+		
+	}
+	
+	private static int[][] getTextFromTextFields() {
+		int[][] arr = new int[][] {
+			{Integer.parseInt(_1.getText()), Integer.parseInt(_2.getText()), Integer.parseInt(_3.getText())}, 
+			{Integer.parseInt(_4.getText()), Integer.parseInt(_5.getText()), Integer.parseInt(_6.getText())}, 
+			{Integer.parseInt(_7.getText()), Integer.parseInt(_8.getText()), Integer.parseInt(_9.getText())}
+		};
+		
+		return arr;
 	}
 	
 	public static void main(String[] args) {
