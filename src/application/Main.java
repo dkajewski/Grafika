@@ -40,13 +40,15 @@ public class Main extends Application {
 	WritableImage image;
 	
 	Button line, rectangle, circle, edit, set, mouse, P3P6, save, RGB, CMYK,
-		fmid, fmed, fsobel, fhpass, fgauss, fmask, ftogray;
+		fmid, fmed, fsobel, fhpass, fgauss, fmask, ftogray,
+		fadd, fmin, fmulti, fdivide;
 	static Label w, h, r, rgbLabel, cmykLabel,
 		rLabel, gLabel, bLabel, cLabel, mLabel, yLabel, kLabel,
 		rl, gl, bl, cl, ml, yl, kl;
 	static TextField w1, h1, r1,
 		rtf, gtf, btf, ctf, mtf, ytf, ktf,
-		_1, _2, _3, _4, _5, _6, _7, _8, _9;
+		_1, _2, _3, _4, _5, _6, _7, _8, _9,
+		foperations;
 	
 	DrawingManager manager;
 	Point begin, end;
@@ -119,6 +121,10 @@ public class Main extends Application {
 		fgauss = new Button("Gauss");
 		fmask = new Button("maska");
 		ftogray = new Button("szary");
+		fadd = new Button("plus");
+		fmin = new Button("minus");
+		fmulti = new Button("mno¿");
+		fdivide = new Button("dziel");
 		
 		//ustawienie zawartoœci etykiet
 		w = new Label("szerokoœæ:");
@@ -167,6 +173,8 @@ public class Main extends Application {
 		_7.setPrefWidth(3);
 		_8.setPrefWidth(3);
 		_9.setPrefWidth(3);
+		foperations = new TextField("0");
+		foperations.setPrefWidth(3);
 		
 		
 		//dodanie elementów do panelu z menu
@@ -218,6 +226,11 @@ public class Main extends Application {
 		rightPane.add(_8, 1, 18);
 		rightPane.add(_9, 2, 18);
 		rightPane.add(ftogray, 3, 14);
+		rightPane.add(foperations, 0, 19);
+		rightPane.add(fadd, 1, 19);
+		rightPane.add(fmin, 2, 19);
+		rightPane.add(fmulti, 3, 19);
+		rightPane.add(fdivide, 0, 20);
 		
 		//ustawienie panelu z p³ótnem
 		canvasPane = new Pane();
@@ -453,6 +466,26 @@ public class Main extends Application {
 		
 		ftogray.setOnAction(event -> {
 			image = f.toGrayScale();
+		});
+		
+		fadd.setOnAction(event -> {
+			int a = Integer.parseInt(foperations.getText());
+			image = f.add(a);
+		});
+		
+		fmin.setOnAction(event -> {
+			int a = Integer.parseInt(foperations.getText());
+			image = f.minus(a);
+		});
+		
+		fmulti.setOnAction(event -> {
+			int a = Integer.parseInt(foperations.getText());
+			image = f.multiply(a);
+		});
+		
+		fdivide.setOnAction(event -> {
+			int a = Integer.parseInt(foperations.getText());
+			image = f.divide(a);
 		});
 		
 	}
