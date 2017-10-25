@@ -95,6 +95,20 @@ public class Filter {
         }
         return image;
     }
+    
+    public WritableImage toGrayScale() {
+    	int r, g, b;
+    	for(int i=0; i<imageColors.length; i++) {
+    		for(int j=0; j<imageColors[0].length; j++) {
+    			r = (int)(imageColors[i][j].getRed()*255);
+    			g = (int)(imageColors[i][j].getGreen()*255);
+    			b = (int)(imageColors[i][j].getBlue()*255);
+    			float grey = (float) ((r+g+b)/3.0);
+    			pw.setColor(i, j, new Color(grey/255.0, grey/255.0, grey/255.0, 1));
+    		}
+    	}
+    	return image;
+    }
 
     private int[][] sort(int[][] arr){
 

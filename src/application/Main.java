@@ -40,7 +40,7 @@ public class Main extends Application {
 	WritableImage image;
 	
 	Button line, rectangle, circle, edit, set, mouse, P3P6, save, RGB, CMYK,
-		fmid, fmed, fsobel, fhpass, fgauss, fmask;
+		fmid, fmed, fsobel, fhpass, fgauss, fmask, ftogray;
 	static Label w, h, r, rgbLabel, cmykLabel,
 		rLabel, gLabel, bLabel, cLabel, mLabel, yLabel, kLabel,
 		rl, gl, bl, cl, ml, yl, kl;
@@ -118,6 +118,7 @@ public class Main extends Application {
 		fhpass = new Button("grnp");
 		fgauss = new Button("Gauss");
 		fmask = new Button("maska");
+		ftogray = new Button("szary");
 		
 		//ustawienie zawartoœci etykiet
 		w = new Label("szerokoœæ:");
@@ -216,6 +217,7 @@ public class Main extends Application {
 		rightPane.add(_7, 0, 18);
 		rightPane.add(_8, 1, 18);
 		rightPane.add(_9, 2, 18);
+		rightPane.add(ftogray, 3, 14);
 		
 		//ustawienie panelu z p³ótnem
 		canvasPane = new Pane();
@@ -447,6 +449,10 @@ public class Main extends Application {
 			_7.setText("1");_8.setText("2");_9.setText("1");
 			int[][] arr = getTextFromTextFields();
 			image = f.Convolution(arr);
+		});
+		
+		ftogray.setOnAction(event -> {
+			image = f.toGrayScale();
 		});
 		
 	}
