@@ -369,8 +369,6 @@ public class Main extends Application {
 					
 					f = new Filter(image);
 					
-					
-					
 				}else {
 					ppm.showDialog("Coœ siê... coœ siê popsu³o...");
 				}
@@ -424,11 +422,16 @@ public class Main extends Application {
 		});
 		
 		fmask.setOnAction(event -> {
+			// przycisk dodaj¹cy filtr z w³asn¹ mask¹
+			// wczytywana jest wartoœæ z pól tekstowych
+			// i wywo³uje siê metoda nak³adaj¹ca filtr na obraz
 			int[][] arr = getTextFromTextFields();
 			image = f.Convolution(arr);
 		});
 		
 		fmid.setOnAction(event -> {
+			// filtr uœredniaj¹cy, ustawienie wartoœci pól maski,
+			// i wykonanie metody stosuj¹cej filtr
 			_1.setText("1");_2.setText("1");_3.setText("1");
 			_4.setText("1");_5.setText("1");_6.setText("1");
 			_7.setText("1");_8.setText("1");_9.setText("1");
@@ -437,10 +440,14 @@ public class Main extends Application {
 		});
 		
 		fmed.setOnAction(event -> {
+			// filtr medianowy
 			image = f.Mediana(3);
 		});
 		
 		fsobel.setOnAction(event -> {
+			// sobel
+			// ustawienie wartoœci pól i wywo³anie metody z tablic¹
+			// utworzon¹ na podstawie wartoœci pól tekstowych
 			_1.setText("1");_2.setText("2");_3.setText("1");
 			_4.setText("0");_5.setText("0");_6.setText("0");
 			_7.setText("-1");_8.setText("-2");_9.setText("-1");
@@ -449,6 +456,9 @@ public class Main extends Application {
 		});
 		
 		fhpass.setOnAction(event -> {
+			// filtr górnoprzepustowy wyostrzaj¹cy
+			// ustawienie wartoœci pól i wywo³anie metody z tablic¹
+			// utworzon¹ na podstawie wartoœci pól tekstowych
 			_1.setText("-1");_2.setText("-1");_3.setText("-1");
 			_4.setText("-1");_5.setText("9");_6.setText("-1");
 			_7.setText("-1");_8.setText("-1");_9.setText("-1");
@@ -457,6 +467,9 @@ public class Main extends Application {
 		});
 		
 		fgauss.setOnAction(event -> {
+			// rozmycie Gaussa
+			// ustawienie wartoœci pól i wywo³anie metody z tablic¹
+			// utworzon¹ na podstawie wartoœci pól tekstowych
 			_1.setText("1");_2.setText("2");_3.setText("1");
 			_4.setText("2");_5.setText("4");_6.setText("2");
 			_7.setText("1");_8.setText("2");_9.setText("1");
@@ -465,31 +478,37 @@ public class Main extends Application {
 		});
 		
 		ftogray.setOnAction(event -> {
+			// wywo³anie metody do konwersji obrazu w skali szaroœci
 			image = f.toGrayScale();
 		});
 		
 		fadd.setOnAction(event -> {
+			// dodanie wartoœci z pola tekstowego do ka¿dego piksela na obrazie
 			int a = Integer.parseInt(foperations.getText());
 			image = f.add(a);
 		});
 		
 		fmin.setOnAction(event -> {
+			// odjêcie wartoœci z pola tekstowego od ka¿dego piksela na obrazie
 			int a = Integer.parseInt(foperations.getText());
 			image = f.minus(a);
 		});
 		
 		fmulti.setOnAction(event -> {
+			// pomno¿enie wartoœci z pola tekstowego z ka¿dym pikselem w obrazie
 			int a = Integer.parseInt(foperations.getText());
 			image = f.multiply(a);
 		});
 		
 		fdivide.setOnAction(event -> {
+			// dzielenie wartoœci piksela przez liczbê z pola tekstowego
 			int a = Integer.parseInt(foperations.getText());
 			image = f.divide(a);
 		});
 		
 	}
 	
+	// metoda konwertuj¹ca wartoœci z pól tekstowych do dwuwymiarowej tablicy typu int
 	private static int[][] getTextFromTextFields() {
 		int[][] arr = new int[][] {
 			{Integer.parseInt(_1.getText()), Integer.parseInt(_2.getText()), Integer.parseInt(_3.getText())}, 

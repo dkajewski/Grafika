@@ -109,22 +109,30 @@ public class Filter {
         return image;
     }
     
+    // metoda do stworzenia obrazu czarno-bia³ego
     public WritableImage toGrayScale() {
     	int r, g, b;
+    	// wczytywana jest wartoœæ ka¿dego piksela 
     	for(int i=0; i<imageColors.length; i++) {
     		for(int j=0; j<imageColors[0].length; j++) {
     			r = (int)(imageColors[i][j].getRed()*255);
     			g = (int)(imageColors[i][j].getGreen()*255);
     			b = (int)(imageColors[i][j].getBlue()*255);
+    			
+    			// ustalenie wartoœci w skali szaroœci nastêpuje poprzez
+    			// dodanie wartoœci RGB oraz podzielenie ich przez 3
     			float grey = (float) ((r+g+b)/3.0);
+    			
+    			// piksel w szarym kolorze jest wstawiany do obrazu
     			pw.setColor(i, j, new Color(grey/255.0, grey/255.0, grey/255.0, 1));
     		}
     	}
     	return image;
     }
 
+    // metoda do sortowania tablicy z pikselami wykorzystywana przy filtrze medianowym
     private int[][] sort(int[][] arr){
-    	
+    	// dla ka¿dego elementu w tablicy wywo³ywany jest Quicksort
         for (int i = 0; i < arr.length; i++) {
             quicksort(0, arr[i].length-1, arr[i]);
         }
@@ -132,13 +140,17 @@ public class Filter {
         return arr;
     }
     
+    // metoda s³u¿¹ca do dodawania wartoœci pikseli
     public WritableImage add(int a) {
     	int r, g, b;
+    	
+    	// ka¿demu pikselowi do ka¿dej sk³adowej dodawana jest wartoœæ a podana jako parametr metody
     	for(int i=0; i<imageColors.length; i++) {
     		for(int j=0; j<imageColors[0].length; j++) {
     			r=(int)(imageColors[i][j].getRed()*255)+a;
     			g=(int)(imageColors[i][j].getGreen()*255)+a;
     			b=(int)(imageColors[i][j].getBlue()*255)+a;
+    			// sprawdzenie czy wartoœci nie wychodz¹ poza skalê
     			if(r>255) {
     				r=255;
     			}
@@ -148,19 +160,27 @@ public class Filter {
     			if(b>255) {
     				b=255;
     			}
+    			
+    			// wstawienie nowej wartoœci piksela do obrazu
     			pw.setColor(i, j, new Color(r/255.0, g/255.0, b/255.0, 1));
     		}
     	}
     	return image;
     }
     
+    
+    // metoda do odejmowania wartoœci od piksela
     public WritableImage minus(int a) {
     	int r, g, b;
+    	// od ka¿dego piksela odejmowana jest wartoœæ podana w parametrze funkcji
     	for(int i=0; i<imageColors.length; i++) {
     		for(int j=0; j<imageColors[0].length; j++) {
     			r=(int)(imageColors[i][j].getRed()*255)-a;
     			g=(int)(imageColors[i][j].getGreen()*255)-a;
     			b=(int)(imageColors[i][j].getBlue()*255)-a;
+    			
+    			// sprawdzenie czy odjêcie wartoœci nie spowodowa³o 
+    			// pojawienia siê ujemnych wartoœci
     			if(r<0) {
     				r=0;
     			}
@@ -170,19 +190,26 @@ public class Filter {
     			if(b<0) {
     				b=0;
     			}
+    			
+    			// wstawienie nowej wartoœci piksela do obrazu
     			pw.setColor(i, j, new Color(r/255.0, g/255.0, b/255.0, 1));
     		}
     	}
     	return image;
     }
     
+    // metoda do mno¿enia 
     public WritableImage multiply(int a) {
     	int r, g, b;
+    	// wartoœæ ka¿dego piksela jest mno¿ona przez wartoœæ podan¹ w parametrze metody
     	for(int i=0; i<imageColors.length; i++) {
     		for(int j=0; j<imageColors[0].length; j++) {
     			r=(int)(imageColors[i][j].getRed()*255)*a;
     			g=(int)(imageColors[i][j].getGreen()*255)*a;
     			b=(int)(imageColors[i][j].getBlue()*255)*a;
+    			
+    			// sprawdzenie czy odjêcie wartoœci nie spowodowa³o 
+    			// pojawienia siê wartoœci wychodz¹cych poza zakres 0-255
     			if(r>255) {
     				r=255;
     			}
@@ -192,19 +219,26 @@ public class Filter {
     			if(b>255) {
     				b=255;
     			}
+    			
+    			// wstawienie nowej wartoœci piksela do obrazu
     			pw.setColor(i, j, new Color(r/255.0, g/255.0, b/255.0, 1));
     		}
     	}
     	return image;
     }
     
+    // metoda do dzielenia wartoœci pikseli
     public WritableImage divide(int a) {
     	int r, g, b;
+    	// dla ka¿dego piksela ustanawiana jest jego nowa wartoœæ
+    	// poprzez podzielenie przez liczbê podan¹ w parametrze metody
     	for(int i=0; i<imageColors.length; i++) {
     		for(int j=0; j<imageColors[0].length; j++) {
     			r=(int)(imageColors[i][j].getRed()*255)/a;
     			g=(int)(imageColors[i][j].getGreen()*255)/a;
     			b=(int)(imageColors[i][j].getBlue()*255)/a;
+    			
+    			// sprawdzenie czy nowe wartoœci mieszcz¹ siê w odpowiednim przedziale
     			if(r<0) {
     				r=0;
     			}
@@ -214,12 +248,15 @@ public class Filter {
     			if(b<0) {
     				b=0;
     			}
+    			
+    			// wstawienie nowej wartoœci piksela do obrazu
     			pw.setColor(i, j, new Color(r/255.0, g/255.0, b/255.0, 1));
     		}
     	}
     	return image;
     }
 
+    // implementacja algorytmu sortuj¹cego Quicksort
     private void quicksort(int low, int high, int[] numbers) {
         int i = low, j = high;
         int pivot = numbers[low + (high-low)/2];
@@ -239,13 +276,15 @@ public class Filter {
                 j--;
             }
         }
-        // Recursion
+        // rekurencyjne wywo³anie quicksortu
         if (low < j)
             quicksort(low, j, numbers);
         if (i < high)
             quicksort(i, high, numbers);
     }
 
+    // metoda do zamiany miejscami dwóch liczb
+    // na potrzeby Quicksortu
     private void exchange(int i, int j, int[] numbers) {
         int temp = numbers[i];
         numbers[i] = numbers[j];
