@@ -41,7 +41,8 @@ public class Main extends Application {
 	
 	Button line, rectangle, circle, edit, set, mouse, P3P6, save, RGB, CMYK,
 		fmid, fmed, fsobel, fhpass, fgauss, fmask, ftogray,
-		fadd, fmin, fmulti, fdivide;
+		fadd, fmin, fmulti, fdivide,
+		stretch, align;
 	static Label w, h, r, rgbLabel, cmykLabel,
 		rLabel, gLabel, bLabel, cLabel, mLabel, yLabel, kLabel,
 		rl, gl, bl, cl, ml, yl, kl;
@@ -54,6 +55,7 @@ public class Main extends Application {
 	Point begin, end;
 	
 	Filter f;
+	PS5 ps5;
 	
 	public PPM ppm;
 	public RGBCMYK rc;
@@ -125,6 +127,9 @@ public class Main extends Application {
 		fmin = new Button("minus");
 		fmulti = new Button("mno¿");
 		fdivide = new Button("dziel");
+		
+		stretch = new Button("rozsz");
+		align = new Button("wyrów");
 		
 		//ustawienie zawartoœci etykiet
 		w = new Label("szerokoœæ:");
@@ -231,6 +236,8 @@ public class Main extends Application {
 		rightPane.add(fmin, 2, 19);
 		rightPane.add(fmulti, 3, 19);
 		rightPane.add(fdivide, 0, 20);
+		rightPane.add(stretch, 1, 20);
+		rightPane.add(align, 2, 20);
 		
 		//ustawienie panelu z p³ótnem
 		canvasPane = new Pane();
@@ -369,6 +376,8 @@ public class Main extends Application {
 					
 					f = new Filter(image);
 					
+					ps5 = new PS5(image);
+					
 				}else {
 					ppm.showDialog("Coœ siê... coœ siê popsu³o...");
 				}
@@ -504,6 +513,15 @@ public class Main extends Application {
 			// dzielenie wartoœci piksela przez liczbê z pola tekstowego
 			int a = Integer.parseInt(foperations.getText());
 			image = f.divide(a);
+		});
+		
+		stretch.setOnAction(event -> {
+			image = ps5.stretchHistogram();
+		});
+		
+		align.setOnAction(event -> {
+			ps5.createD();
+			image = ps5.alignHistogram();
 		});
 		
 	}
