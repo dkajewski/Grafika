@@ -17,14 +17,17 @@ public class PS5 {
 	// tablice daj¹ informacjê na temat iloœci pikseli danego koloru
 	int[] redVals, greenVals, blueVals;
 	
+	// tablice do dystrybuanty
 	double[] redD, greenD, blueD;
 	
 	public PS5(WritableImage img) {
 		this.img = img;
+		//inicjalizacja tablic z wartoœciami pikseli
 		redPixels = new double[(int)img.getWidth()][(int)img.getHeight()];
 		greenPixels = new double[(int)img.getWidth()][(int)img.getHeight()];
 		bluePixels = new double[(int)img.getWidth()][(int)img.getHeight()];
 		
+		// inicjacja tablic w których przechowywana jest iloœæ pikseli danego odcienia koloru
 		redVals = new int[256];
 		greenVals = new int[256];
 		blueVals = new int[256];
@@ -35,6 +38,7 @@ public class PS5 {
 		findMinMax();
 	}
 	
+	// metoda do znajdowania wartoœci minimalnej danej barwy
 	public void findMinMax() {
 		for(int y=0; y<img.getHeight(); y++) {
 			for(int x=0; x<img.getWidth(); x++) {
@@ -49,6 +53,7 @@ public class PS5 {
 		}
 	}
 	
+	// metoda wstawiaj¹ca do tablic wartoœci danych pikseli
 	public void prepareArrays() {
 		for(int y=0; y<img.getHeight(); y++) {
 			for(int x=0; x<img.getWidth(); x++) {
@@ -63,6 +68,7 @@ public class PS5 {
 		}
 	}
 	
+	// metoda do rozszerzenia histogramu
 	public WritableImage stretchHistogram() {
 		int rpix;
 		int gpix;
@@ -80,6 +86,7 @@ public class PS5 {
 		return img;
 	}
 	
+	// stworzenie dystrybuanty
 	public void createD() {
 		redD = new double[256];
 		greenD = new double[256];
@@ -104,6 +111,7 @@ public class PS5 {
 		blueD[255]/=s;
 	}
 	
+	// metoda do okreœlenia pierwszej niezerowej wartoœci dystrybuanty
 	private double getFirstD(double[] d) {
 		for (int i=0; i<256; i++) {
 			if (d[i] != 0) {
@@ -113,6 +121,7 @@ public class PS5 {
 		return 0;
 	}
 	
+	// metoda do wyrównania histogramu
 	public WritableImage alignHistogram() {
 		double dR = getFirstD(redD);
 		double dG = getFirstD(greenD);
@@ -128,6 +137,45 @@ public class PS5 {
 				greenPixels[x][y] = ((greenD[(int)g]-dG) / (1-dG)*255)/255.0;
 				bluePixels[x][y] = ((blueD[(int)b]-dB) / (1-dB)*255)/255.0;
 				pw.setColor(x, y, new Color(redPixels[x][y], greenPixels[x][y], bluePixels[x][y], 1));
+			}
+		}
+		
+		return img;
+	}
+	
+	// metoda do binaryzacji
+	public WritableImage binary(int value) {
+		int r, g, b;
+		for(int y=0; y<img.getHeight(); y++) {
+			for(int x=0; x<img.getWidth(); x++) {
+				r = (int) (pr.getColor(x, y).getRed()*255);
+				g = (int) (pr.getColor(x, y).getGreen()*255);
+				b = (int) (pr.getColor(x, y).getBlue()*255);
+				if((r+g+b)/3 > value) {
+					pw.setColor(x, y, new Color(1, 1, 1, 1));
+				}else {
+					pw.setColor(x, y, new Color(0, 0, 0, 1));
+				}
+			}
+		}
+		
+		return img;
+	}
+	
+	public WritableImage binaryPercent(int percent) {
+		int r, g, b;
+		int value = (percent*255/100);
+		
+		for(int y=0; y<img.getHeight(); y++) {
+			for(int x=0; x<img.getWidth(); x++) {
+				r = (int) (pr.getColor(x, y).getRed()*255);
+				g = (int) (pr.getColor(x, y).getGreen()*255);
+				b = (int) (pr.getColor(x, y).getBlue()*255);
+				if((r+g+b)/3 > value) {
+					pw.setColor(x, y, new Color(1, 1, 1, 1));
+				}else {
+					pw.setColor(x, y, new Color(0, 0, 0, 1));
+				}
 			}
 		}
 		

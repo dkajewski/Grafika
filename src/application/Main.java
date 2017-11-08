@@ -42,14 +42,15 @@ public class Main extends Application {
 	Button line, rectangle, circle, edit, set, mouse, P3P6, save, RGB, CMYK,
 		fmid, fmed, fsobel, fhpass, fgauss, fmask, ftogray,
 		fadd, fmin, fmulti, fdivide,
-		stretch, align;
+		stretch, align, binary, percent;
 	static Label w, h, r, rgbLabel, cmykLabel,
 		rLabel, gLabel, bLabel, cLabel, mLabel, yLabel, kLabel,
 		rl, gl, bl, cl, ml, yl, kl;
 	static TextField w1, h1, r1,
 		rtf, gtf, btf, ctf, mtf, ytf, ktf,
 		_1, _2, _3, _4, _5, _6, _7, _8, _9,
-		foperations;
+		foperations,
+		bin, perc;
 	
 	DrawingManager manager;
 	Point begin, end;
@@ -130,6 +131,7 @@ public class Main extends Application {
 		
 		stretch = new Button("rozsz");
 		align = new Button("wyrów");
+		percent = new Button("% bin");
 		
 		//ustawienie zawartoœci etykiet
 		w = new Label("szerokoœæ:");
@@ -180,6 +182,11 @@ public class Main extends Application {
 		_9.setPrefWidth(3);
 		foperations = new TextField("0");
 		foperations.setPrefWidth(3);
+		bin = new TextField("");
+		bin.setPrefWidth(3);
+		binary = new Button("bin");
+		perc = new TextField("");
+		perc.setPrefWidth(3);
 		
 		
 		//dodanie elementów do panelu z menu
@@ -238,6 +245,10 @@ public class Main extends Application {
 		rightPane.add(fdivide, 0, 20);
 		rightPane.add(stretch, 1, 20);
 		rightPane.add(align, 2, 20);
+		rightPane.add(bin, 0, 21);
+		rightPane.add(binary, 1, 21);
+		rightPane.add(perc, 0, 22);
+		rightPane.add(percent, 1, 22);
 		
 		//ustawienie panelu z p³ótnem
 		canvasPane = new Pane();
@@ -522,6 +533,16 @@ public class Main extends Application {
 		align.setOnAction(event -> {
 			ps5.createD();
 			image = ps5.alignHistogram();
+		});
+		
+		binary.setOnAction(event -> {
+			int a = Integer.parseInt(bin.getText());
+			image = ps5.binary(a);
+		});
+		
+		percent.setOnAction(event -> {
+			int a = Integer.parseInt(perc.getText());
+			image = ps5.binaryPercent(a);
 		});
 		
 	}
