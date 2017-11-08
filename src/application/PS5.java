@@ -91,8 +91,10 @@ public class PS5 {
 		redD = new double[256];
 		greenD = new double[256];
 		blueD = new double[256];
-		
+		// zmienna przechowuje iloœæ pikseli w obrazie
 		int s = (int)(img.getWidth()*img.getHeight());
+		
+		// ustalenie pocz¹tkowych wartoœci dystrybuanty
 		redD[0] = redVals[0];
 		greenD[0] = greenVals[0];
 		blueD[0] = blueVals[0];
@@ -122,7 +124,7 @@ public class PS5 {
 	}
 	
 	// metoda do wyrównania histogramu
-	public WritableImage alignHistogram() {
+	public WritableImage histogramEqualization() {
 		double dR = getFirstD(redD);
 		double dG = getFirstD(greenD);
 		double dB = getFirstD(blueD);
@@ -162,6 +164,7 @@ public class PS5 {
 		return img;
 	}
 	
+	// metoda binaryzacji procentowej
 	public WritableImage binaryPercent(int percent) {
 		int r, g, b;
 		int value = (percent*255/100);

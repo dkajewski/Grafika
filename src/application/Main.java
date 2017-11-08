@@ -42,7 +42,7 @@ public class Main extends Application {
 	Button line, rectangle, circle, edit, set, mouse, P3P6, save, RGB, CMYK,
 		fmid, fmed, fsobel, fhpass, fgauss, fmask, ftogray,
 		fadd, fmin, fmulti, fdivide,
-		stretch, align, binary, percent;
+		stretch, equalization, binary, percent;
 	static Label w, h, r, rgbLabel, cmykLabel,
 		rLabel, gLabel, bLabel, cLabel, mLabel, yLabel, kLabel,
 		rl, gl, bl, cl, ml, yl, kl;
@@ -130,7 +130,7 @@ public class Main extends Application {
 		fdivide = new Button("dziel");
 		
 		stretch = new Button("rozsz");
-		align = new Button("wyrów");
+		equalization = new Button("wyrów");
 		percent = new Button("% bin");
 		
 		//ustawienie zawartoœci etykiet
@@ -244,7 +244,7 @@ public class Main extends Application {
 		rightPane.add(fmulti, 3, 19);
 		rightPane.add(fdivide, 0, 20);
 		rightPane.add(stretch, 1, 20);
-		rightPane.add(align, 2, 20);
+		rightPane.add(equalization, 2, 20);
 		rightPane.add(bin, 0, 21);
 		rightPane.add(binary, 1, 21);
 		rightPane.add(perc, 0, 22);
@@ -526,20 +526,24 @@ public class Main extends Application {
 			image = f.divide(a);
 		});
 		
+		// rozci¹gniêcie histogramu
 		stretch.setOnAction(event -> {
 			image = ps5.stretchHistogram();
 		});
 		
-		align.setOnAction(event -> {
+		// wyrównanie histogramu
+		equalization.setOnAction(event -> {
 			ps5.createD();
-			image = ps5.alignHistogram();
+			image = ps5.histogramEqualization();
 		});
 		
+		// binaryzacja
 		binary.setOnAction(event -> {
 			int a = Integer.parseInt(bin.getText());
 			image = ps5.binary(a);
 		});
 		
+		// binaryzacja procentowa
 		percent.setOnAction(event -> {
 			int a = Integer.parseInt(perc.getText());
 			image = ps5.binaryPercent(a);
